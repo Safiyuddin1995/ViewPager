@@ -33,8 +33,6 @@ public class MainActivity2 extends AppCompatActivity {
     private static ViewPager mPager;
     private static int currentPage = 0;
     private static int NUM_PAGES = 0;
-    private static final Integer[] IMAGES = {R.drawable.one, R.drawable.two, R.drawable.three, R.drawable.five};
-    private ArrayList<Integer> ImagesArray = new ArrayList<Integer>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +60,7 @@ public class MainActivity2 extends AppCompatActivity {
             String jsonStr = sh.makeServiceCall(url);
             Log.e(TAG, "Response from url: " + jsonStr);
 
-            if (jsonStr != null){
+            if (jsonStr != null) {
 
                 try {
                     JSONObject jsonObj = new JSONObject(jsonStr);
@@ -72,28 +70,23 @@ public class MainActivity2 extends AppCompatActivity {
 
                         JSONObject c = contacts.getJSONObject(i);
 
-                        String id = c.getString("id");
-                        String name = c.getString("name");
-                        String email = c.getString("email");
-                        String address = c.getString("address");
-                        String gender = c.getString("gender");
-
                         JSONObject phone = c.getJSONObject("phone");
-                        String mobile = phone.getString("mobile");
                         String home = phone.getString("home");
                         String office = phone.getString("office");
 
                         HashMap<String, String> contact = new HashMap<>();
 
                         // adding each child node to HashMap key => value
-                        contact.put("id", id);
-                        contact.put("name", name);
-                        contact.put("email", email);
-                        contact.put("mobile", mobile);
+                        contact.put("id", c.getString("id"));
+                        contact.put("name", c.getString("name"));
+                        contact.put("email", c.getString("email"));
+                        contact.put("mobile", phone.getString("mobile"));
+                        contact.put("address", c.getString("address"));
+                        contact.put("gender", c.getString("gender"));
+                        contact.put("image", "https://www.google.com/images/srpr/logo11w.png");
 
                         // adding contact to contact list
                         contactList.add(contact);
-
                     }
 
                     NUM_PAGES = contacts.length();
@@ -102,10 +95,7 @@ public class MainActivity2 extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(),
-                                    "Json parsing error: " + e.getMessage(),
-                                    Toast.LENGTH_LONG)
-                                    .show();
+                            Toast.makeText(getApplicationContext(), "Json parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
                 }
@@ -137,7 +127,7 @@ public class MainActivity2 extends AppCompatActivity {
 
     private void init() {
 
-        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager = findViewById(R.id.pager);
         mPager.setAdapter(new SlidingImage_Adapter(MainActivity2.this, contactList));
 
         CirclePageIndicator indicator = findViewById(R.id.indicator);
